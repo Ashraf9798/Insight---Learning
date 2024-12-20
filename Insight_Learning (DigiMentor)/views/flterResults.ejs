@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+    <link rel="stylesheet" href="/stylesheets/home.css">
+</head>
+<body>
+
+<%- include ('partials/navbar.ejs') %>     
+  
+<div class="col-md-12">
+   <form action="#" method="post">
+       <div class="form-group ad-30" style="margin-top:8px;">
+            <div class="input-group search-style">
+                <input class="form-control new-search-bar"  name="country" id="search" placeholder="Enter Your Club Name" type="text">
+                <span class="input-group-btn">
+                    <button class="btn input-btn" type="" id="search-form">Search</button>
+                </span>
+            </div>
+        </div>
+   </form>
+</div>
+  
+<div class="col-md-12">
+    <% if(currentUser) { %> 
+        <input type="hidden" name="user-name" id="user-name" value="<%= currentUser.username %>">
+        <input type="hidden" name="user-image" id="user-image" value="<%= currentUser.userImage %>">
+    <% } %> 
+    <div class="">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="filter-container">
+                            <div class="card">
+                                <form action="/results" method="POST">
+                                    <div class="content">
+                                        <p class="filter">
+                                            FILTER
+                                        </p>
+                                        <hr/>
+                                        <select class="form-control" name="country" id="country">
+                                            <option value="">Filter By Country</option>
+                                            <% for(country of cntry) { %> 
+											    <option value="<%= country._id %>"><%= country._id %></option>
+                                            <% } %> 
+                                        </select>
+                                        <div class="clearfix"></div>
+                                        <button class="btn add-apply">Apply</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-9">
+                <div>
+                    <% for(brand of data) { %> 
+                        <div class="category-list">
+                            <div class="row">
+                                <% for(brand1 of brand) { %> 
+                                    <form action="/home" method="POST" id="add-fav">
+                                        <div class="item col-md-4">
+                                            <a href="/group/<%= brand1.name %>" style="text-decoration: none;">
+                                                <div class="thumbnail">
+                                                    <% if(brand1.image.path) { %>
+                                                        <img src="<%= brand1.image.path %>" alt="Image">
+                                                    <% } else { %>    
+                                                        <img src="https://res.cloudinary.com/abhishek26127/image/upload/v1605255766/kpawelrpbowr0lbxflny.png" alt="No Image" style="height: 195px;">
+                                                    <% } %>     
+                                                    <div class="caption">
+                                                        <h4><%= brand1.name %> </h4>
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-6">
+                                                                <p>
+                                                                    <%= brand1.country %> 
+                                                                </p>
+                                                            </div>
+                                                            
+                                                            <div class="col-xs-12 col-md-6">
+                                                                <% if(currentUser) { %> 
+                                                                    <input type="hidden" name="id" id="id" value="<%= brand1._id %>">
+                                                                    <input type="hidden" name="clubName" id="clubName" value="<%= brand1.name %> ">
+                                                                    <button class="btn add-fav">
+                                                                        Add To Favorite
+                                                                    </button>
+                                                                <% } else { %>
+                                                                    <button class="btn add-fav" disabled>
+                                                                        Add To Favorite
+                                                                    </button>
+                                                                <% } %>     
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </form>
+                                <% } %> 
+                            </div>
+                        </div>
+                    <% } %> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/javascript/groupChat/sendRequest.js"></script>
+<script src="/javascript/home.js"></script>
+<script src="/javascript/global.js"></script>
+</body>
+</html>

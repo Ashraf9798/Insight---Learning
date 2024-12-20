@@ -1,0 +1,211 @@
+<nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/home">WWE Club</a>
+      </div>
+  
+      <% if(currentUser) { %>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right" id="reload">
+            
+            <li>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon fa fa-bell nav-glyphicon"></span><b class="caret"></b>
+                  <% if(user.totalRequest > 0) { %> 
+                    <span class="label label-primary nav-label-icon"><%= user.totalRequest %></span>
+                  <% } else { %>
+                    <span class="label label-primary nav-label-icon" style="display: none;"></span>
+                  <% } %>   
+              </a>
+  
+              <ul class="dropdown-menu">
+                <li>
+                  <div class="navbar-login" id="requestBar">
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="dropdown-tag">
+                          <h3 class="text-center dropdown-tag-head" >
+                            Notifications
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="col-md-12">
+                      <% if(user.request.length > 0) { %> 
+                        <% for(let data of user.request) { %> 
+                          <div class="row">
+                            <div class="col-md-3">
+                              <p class="text-center">
+                                <% if(data.userId.userImage) { %> 
+                                  <img src="<%= data.userId.userImage %>"  class="img-circle img-responsive dropdown-img" />
+                                <% } else { %>
+                                  <img src="/images/noimage.png"  class="img-circle img-responsive dropdown-img" />
+                                <% } %> 
+                              </p>
+                            </div>
+                            <div class="col-md-9 pleft-0">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="col-md-12">
+                                    <p class="text-left">
+                                      <strong id=""><%= data.username %> </strong>
+                                    </p>
+                                  </div>
+                                  <div class="col-md-12">
+                                    <div class="row">
+                                      <div class="col-md-6 col-sm-6 col-xs-6">
+                                        <input type="hidden" name="senderId" id="senderId" value="<%= data.userId._id %>">
+                                        <input type="hidden" name="senderName" id="senderName" value="<%= data.username %>">
+                                        <button type="submit" name="accept" id="accept_friend" class="btn btn-default drop-accept accept">
+                                          <i class="fa fa-check" aria-hidden="true"></i>
+                                           Accept
+                                        </button>
+                                      </div>
+                                      <div class="col-md-6 col-sm-6 col-xs-6">
+                                        <input type="hidden" name="userId" id="userId" value="<%= data.userId._id %>">
+                                        <button type="submit" name="cancel" class="btn drop-cancel remove" id="cancel_friend">
+                                        <i class="fa fa-times" aria-hidden="true"></i> 
+                                          Cancel
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+      
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <hr />
+                        <% } %> 
+                      <% } else { %>
+                          <p class="text-center">No notifications</p>  
+                      <% } %>   
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </li>
+
+            <li>
+              <% var num = 0 %>
+              <% for(var chat of chatResult) { %>
+                <% if(chat.body.isRead === false) { %>
+                  <% num++ %> 
+                <% } %>    
+              <% } %>    
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="fas fa-comment-dots"></i> <b class="caret"></b> 
+                <% if(num !== 0) { %>
+                  <span class="label label-primary nav-label-icon" id=""><%= num %></span>
+                <% } else { %>
+                  <span class="label label-primary nav-label-icon" id=""></span>
+                <% } %>   
+              </a>
+              <ul class="dropdown-menu dmenu">
+                <li>
+                    <div class="navbar-login">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="dropdown-tag">
+                                    <h3 class="text-center dropdown-tag-head">
+                                        Messages
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <% if(chatResult) { %>
+                              <% for(let val of chatResult) { %>
+                                <% if(currentUser.username !== val.body.senderName) { %> 
+                                  <a data-value="<%= val.body._id %>" id="messageLink" href="/chat/<%= val.body.senderName %>.<%= currentUser.username %>">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <p class="text-center">
+                                              <img src="<%= val.body.userImage %>" class="img-circle img-responsive dropdown-img" />
+                                            </p>
+                                        </div>
+                                        <div class="col-md-9 pleft-0">
+                                            <div class="row">
+                                                <div class="col-md-12 textRow">
+                                                    <div class="col-md-12" id="textRow">
+                                                        <p class="text-left drop-name">
+                                                          <% if(currentUser.username !== val.body.receiverName) { %> 
+                                                            <strong><%= val.body.receiverName %></strong>
+                                                          <% } else { %>
+                                                            <strong><%= val.body.senderName %></strong>
+                                                          <% } %>     
+                                                        </p>
+                                                        <input type="hidden" name="chatId" id="chatId" value="<%= val.body._id %>">
+                                                        <!-- <input type="hidden" name="chatId" id="chatId" value="<%= val.body._id %>"> -->
+                                                        <%= val.body.message %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </a>
+                                <% } else if(currentUser.username === val.body.senderName) { %> 
+                                  <a data-value="<%= val.body._id %>" id="messageLink" href="/chat/<%= val.body.receiverName %>.<%= currentUser.username %>">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <p class="text-center">
+                                              <img src="<%= val.body.userImage %>" class="img-circle img-responsive dropdown-img" />
+                                            </p>
+                                        </div>
+                                        <div class="col-md-9 pleft-0">
+                                            <div class="row">
+                                                <div class="col-md-12 textRow">
+                                                    <div class="col-md-12" id="textRow">
+                                                        <p class="text-left drop-name">
+                                                          <% if(currentUser.username !== val.body.receiverName) { %> 
+                                                            <strong><%= val.body.receiverName %></strong>
+                                                          <% } else { %>
+                                                            <strong><%= val.body.senderName %></strong>
+                                                          <% } %>     
+                                                        </p>
+                                                        <%= val.body.message %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </a>
+                                  <hr class="dropdown-divider" />
+                                <% } %> 
+                              <% } %> 
+                            <% } %>  
+                        </div>
+                    </div>
+                </li>
+  
+              </ul>
+            </li>
+
+
+
+            <li><a href="/news">WWE News</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <%= currentUser.username || currentUser.fullname %> <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#"><i></i>My Profile</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      <% } else { %>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/">Sign In</a></li>
+          <li><a href="/signup">Sign Up</a></li>
+        </ul>
+      <% } %>     
+    </div>
+</nav>

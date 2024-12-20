@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WWE Latest News</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+    <link rel="stylesheet" href="/stylesheets/home.css">
+    <link rel="stylesheet" href="/stylesheets/news.css">
+</head>
+<body>
+
+<%- include ('partials/navbar.ejs') %>     
+  
+<div class="col-md-12">
+   <input type="hidden" id="name-user" value="<%= user.username %>">
+   <input type="hidden" id="name-image" value="<%= user.userImage %>">
+   
+   <div class="col-md-12">
+       <h1 class="news-mainhead">
+           Latest WWE News
+       </h1>
+   </div>
+   
+   <div class="col-md-12 col-sm-12 news-bottom" id="newsResults">
+        <% for(let news of wweNews.data.response.results) { %>
+            <form class="paginate">
+                <div class="col-md-12 news-post">
+                    <div class="row">
+                        <a href="<%= news.webUrl %>" target="_blank" style="text-decoration: none;">
+                            <div class="col-md-2">
+                                <img src="<%= news.fields.thumbnail %>" class="img-responsive" alt="">
+                            </div>
+                            <div class="col-md-10">
+                                <h2><%= news.webTitle %></h2>
+                                <h4 class="news-date"><%= new Date(Date.parse(news.webPublicationDate)).toDateString() %></h4>
+                                <p class="news-text"><%= news.fields.trailText %></p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        <% } %> 
+   </div>
+   
+   <div class="col-md-12">
+      <button id="loadMore" class="btn col-xs-12 n-hide-screen-large">Load More</button>
+      <p id="top">
+          <a href="#top" id="linkTop">Back to top</a>
+      </p>
+   </div>
+   
+</div>
+
+  
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/javascript/dropDown.js"></script>
+<script src="/javascript/groupChat/sendRequest.js"></script>
+<script src="/javascript/home.js"></script>
+<script src="/javascript/global.js"></script>
+<script src="/javascript/deparam.js"></script>
+<script src="/javascript/paginate.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
